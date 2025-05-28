@@ -20,11 +20,9 @@ function DeleteBtn({ id }) {
 
 
   return (
-  
          <a onClick={handleDelete} className='bg-red-500 text-white border rounded-md py-2 px-3 my-2 text-lg cursor-pointer'>
             Delete
         </a>
-  
   )
 }
 
