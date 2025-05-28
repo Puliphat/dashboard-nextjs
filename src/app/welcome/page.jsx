@@ -8,6 +8,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
+import DeleteBtn from './DeleteBtn'
 
 function WelcomePage() {
   const router = useRouter();
@@ -85,7 +86,7 @@ function WelcomePage() {
                   <p>{post.content}</p>
                   <div className='mt-5'>
                     <Link href={`/edit/${post._id}`} className='bg-gray-500 text-white border rounded-md py-2 px-3 my-2 text-lg cursor-pointer'>Edit</Link>
-                    <Link href={`/delete/${post._id}`} className='bg-red-500 text-white border rounded-md py-2 px-3 my-2 text-lg cursor-pointer'>Delete</Link>
+                    <DeleteBtn id={post._id} />
                   </div>
                 </div>
               ))

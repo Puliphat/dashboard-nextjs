@@ -12,12 +12,19 @@ export async function POST(req) {
 
 //ดึงข้อมูลจาก database
 export async function GET(req) {
-    //บันทัดนี้ดึง params จาก local storage เพื่อเช็คว่าตรงกับ email ที่ต้องการดึงข้อมูลหรือไม่
+    //บันทัดนี้ดึง params จาก local storage เพื่อเช็คว่าตรงกับ email ใน database ไหม เพื่อแสดงแต่โพสที่ตรงกัน
     const userEmail = req.nextUrl.searchParams.get('email');
   
     await connectMongoDB();
     const posts = await Post.find({ userEmail : userEmail });
     return NextResponse.json({ posts });
+}
+
+export async function DELETE(req) {
+    const id = req.nextUrl.searchParams.get('id');
+    await connectMongoDB();
+    await Post.findByIdAndDelete(id);
+    return NextResponse.json({ message: 'Post deleted' }, { status: 200 });
 }
 
 
