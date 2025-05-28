@@ -28,6 +28,7 @@ function EditPage({ params }) {
   useEffect(() => {
     if (status === 'unauthenticated') {
       router.replace('/login');
+      return;
     }
   }, [status, router]);
 

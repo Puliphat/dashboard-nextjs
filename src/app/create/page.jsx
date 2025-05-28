@@ -22,6 +22,7 @@ function CreatePage() {
   useEffect(() => {
     if (status === 'unauthenticated') {
       router.replace('/login');
+      return;
     }
   }, [status, router]);
 
@@ -66,6 +67,10 @@ function CreatePage() {
         </div>
       </Container>
     );
+  }
+
+  if (!session) {
+    return null;
   }
 
   return (

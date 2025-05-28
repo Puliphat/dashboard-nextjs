@@ -18,6 +18,7 @@ function WelcomePage() {
   useEffect(() => {
     if (status === 'unauthenticated') {
       router.replace('/login');
+      return;
     }
   }, [status, router]);
 
@@ -54,6 +55,9 @@ function WelcomePage() {
     );
   }
 
+  if (!session) {
+    return null;
+  }
 
   return (
     <Container>
