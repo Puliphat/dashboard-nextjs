@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { connectMongoDB } from "../../../../lib/mongodb";
 import User from "../../../../models/user";
 
+
+//userExists คือการตรวจสอบว่ามี user ที่มี email นี้อยู่ใน database หรือยัง
 export async function POST(req) {
     try {
         await connectMongoDB();

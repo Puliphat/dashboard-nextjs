@@ -45,6 +45,29 @@ const authOptions = {
     secret: process.env.NEXTAUTH_SECRET,
     pages: {
         signIn: '/login',
+    },
+    callbacks: {
+      async jwt({ token, user }) {
+        if (user) {
+          return {
+            ...token,
+            id: user.id,
+            role: user.role
+          }
+        }
+        return token;
+      },
+      async session({ session, token }) {
+        return {
+          //มันคือการเขียนทับ user อันใหม่เข้าไปใน session.user ของมูลใน client browser
+            ...session,
+            user: {
+              ...session.user,
+              id: token.id,
+              role: token.role
+            }
+        }
+      }
     }
 }
 
