@@ -33,7 +33,7 @@
 ### 1. Clone โปรเจกต์
 
 ```bash
-git clone https://github.com/your-username/your-repo.git
+git clone https://github.com/Puliphat/dashboard-nextjs
 cd your-repo
 npm install
 npm run dev
