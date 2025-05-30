@@ -23,10 +23,18 @@ function WelcomePage() {
   }, [status, router]);
 
   useEffect(() => {
+    if ( status === 'authenticated' && session?.user?.role == 'admin') {
+      router.replace('/admin');
+      return;
+    }
+  }, [session, router]);
+
+
+  useEffect(() => {
     if (session?.user?.email) {
       const getPosts = async () => {
         try {
-          const res = await fetch(`http://localhost:3000/api/posts?email=${session.user.email}`, {
+          const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/posts?email=${session.user.email}`, {
             cache: 'no-store'
           });
           
@@ -54,10 +62,10 @@ function WelcomePage() {
       </Container>
     );
   }
-
-  if (!session) {
+  
+  if(!session) {
     return null;
-  }
+  } 
 
   return (
     <Container>
@@ -81,7 +89,7 @@ function WelcomePage() {
               postData.map((post) => (
                 <div key={post._id} className='shadow-xl p-10 my-10 rounded-xl'>
                   <h3 className='text-2xl'>{post.title}</h3>
-                  <Image className='my-3 rounded-md object-cover' 
+                  <img className='my-3 rounded-md object-cover' 
                     src={post.img} 
                     width={300}
                     height={300}

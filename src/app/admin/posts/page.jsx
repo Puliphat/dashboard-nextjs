@@ -1,17 +1,56 @@
-import React from 'react'
+'use client'
+
+import React, { useEffect, useState } from 'react'
 import Container from '../components/Container'
 import AdminNav from '../components/AdminNav'
 import Footer from '../components/Footer'
 import SideBar from '../components/SideBar'
 import Link from 'next/link'
 import Image from 'next/image'
-
+import { useSession } from 'next-auth/react'
+import { useRouter } from 'next/navigation'
+import DeleteBtn from './DeleteBtn'
 
 function PostsPage() {
+    const router = useRouter();
+    const { data: session, status } = useSession();
+
+    useEffect(() => {
+        if (status === 'unauthenticated' || session?.user?.role !== 'admin') {
+          router.replace('/login');
+          return;
+        }
+      }, [status, router, session]);    
+
+    const [PostsData, setPostsData] = useState([]);
+
+    const getPostsData = async () => {
+        try{
+            const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/totalposts`, {
+                cache: 'no-store'
+            });
+
+            if(!res.ok) {
+                throw new Error("Failed to loading posts data");
+            }
+
+            const data = await res.json();
+            setPostsData(data.totalPosts);
+
+        } catch(error) {
+            console.log(error);
+        }
+    }
+
+    useEffect(() => {
+        getPostsData();
+    }, []);
+
+
   return (
     <div>
       <Container>
-        <AdminNav />
+        <AdminNav session={session} />
         <div className='flex-grow'>
             <div className='container mx-auto'>
                 <div className='flex mt-10'>
@@ -33,24 +72,26 @@ function PostsPage() {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td  className='p-5'>11</td>
-                                        <td className='p-5'>this is a post title</td>
-                                        <td className='p-5'>
-                                            <Image
-                                            className='my-3 rounded-md'
-                                            src="https://images.unsplash.com/photo-1472491235688-bdc81a63246e?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                                            alt="post image"
-                                            width={80}
-                                            height={80}
-                                            />
-                                        </td>
-                                        <td className='p-5'>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Expedita, cumque.</td>
+                                    {PostsData?.map(post => (
+                                      <tr key={post._id}>
+                                      <td  className='p-5'>{post._id}</td>
+                                      <td className='p-5'>{post.title}</td>
+                                      <td className='p-5'>
+                                          <img
+                                          className='my-3 rounded-md'
+                                          src={post.img}
+                                          alt={post.title}
+                                          width={80}
+                                          height={80}
+                                          />
+                                      </td>
+                                        <td className='p-5'>{post.content}</td>
                                         <td className='p-5 flex gap-3'>
-                                            <Link href='/admin/posts/edit' className='bg-gray-500 text-white border px-3 py-2 rounded-md my-2 text-lg'>Edit</Link>
-                                            <Link href='/admin/posts/delete' className='bg-red-500 text-white border px-3 py-2 rounded-md my-2 text-lg'>Delete</Link>
-                                        </td>
-                                    </tr>
+                                          <Link href={`/admin/posts/edit/${post._id}`} className='bg-gray-500 text-white border px-3 py-2 rounded-md my-2 text-lg'>Edit</Link>
+                                          <DeleteBtn id={post._id} />                                          
+                                      </td>
+                                  </tr>
+                                    ))}
                                 </tbody>
                             </table>
                         </div>

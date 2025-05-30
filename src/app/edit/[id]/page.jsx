@@ -15,7 +15,11 @@ function EditPage({ params }) {
   const { id } = resolvedParams;
 
 
-  const [postData, setPostData] = useState('');
+  const [postData, setPostData] = useState({
+    title: '',
+    img: '',
+    content: ''
+  });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -31,11 +35,29 @@ function EditPage({ params }) {
       return;
     }
   }, [status, router]);
+  
+
+  useEffect(() => {
+    if ( status === 'authenticated' && session?.user?.role == 'admin') {
+      router.replace('/admin');
+      return;
+    }
+  }, [session, router]);
+
+  
+  useEffect(() => {
+    if (postData) {
+      setNewTitle(postData.post?.title);
+      setNewImg(postData.post?.img);
+      setNewContent(postData.post?.content);
+    }
+  }, [postData]);
+
 
   useEffect(() => {
     const getPostById = async () => {
       try {
-        const res = await fetch(`http://localhost:3000/api/posts/${id}`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/posts/${id}`, {
           method: 'GET',
           cache: 'no-store'
         });
@@ -70,7 +92,7 @@ function EditPage({ params }) {
     }
 
     try {
-      const res = await fetch(`http://localhost:3000/api/posts/${id}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/posts/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -121,19 +143,16 @@ function EditPage({ params }) {
               <input  
                 type="text" 
                 className='w-[300px] bg-gray-200 border rounded-md py-2 px-3 my-2 text-lg' 
-                  placeholder={postData.post?.title} 
-                  onChange={(e) => setNewTitle(e.target.value)} value={newTitle}
+                value={newTitle}  onChange={(e) => setNewTitle(e.target.value)} 
               />
               <input 
                 type="text" 
                 className='w-[300px] bg-gray-200 border rounded-md py-2 px-3 my-2 text-lg' 
-                  placeholder={postData.post?.img} 
-                  onChange={(e) => setNewImg(e.target.value)} value={newImg}
+                value={newImg}  onChange={(e) => setNewImg(e.target.value)} 
               />
               <textarea 
                 className='w-[300px] bg-gray-200 border rounded-md py-2 px-3 my-2 text-lg' rows="8"
-                  placeholder={postData.post?.content} 
-                  onChange={(e) => setNewContent(e.target.value)} value={newContent}
+                value={newContent}  onChange={(e) => setNewContent(e.target.value)} 
               />
               <button 
                 type='submit' 

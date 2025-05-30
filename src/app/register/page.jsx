@@ -40,7 +40,7 @@ function RegisterPage() {
     }
 
     try {
-      const resUserExists = await fetch("http://localhost:3000/api/userExists", {
+      const resUserExists = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/userExists`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -55,7 +55,7 @@ function RegisterPage() {
         return
       }
       
-      const res = await fetch("http://localhost:3000/api/register", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -69,7 +69,7 @@ function RegisterPage() {
         setSuccess("User registered successfully")
         form.reset()
       } else {
-        console.log("User registration failed")
+        setError("User registration failed")
       }
     } catch(error) {
       console.log("Error during registration", error)
@@ -86,9 +86,6 @@ function RegisterPage() {
     );
   }
 
-  if (session) {
-    return null;
-  }
   
   return (
     <div>
@@ -101,13 +98,13 @@ function RegisterPage() {
               <hr className='border-gray-300 my-5'></hr>
               <form onSubmit={handleSubmit}>
                 {error && (
-                  <div className='bg-red-500 w-fit text-sm text-white px-3 py-1 rounded-md mt-2'>
+                  <div className='bg-red-400 w-fit text-sm text-white px-3 py-1 rounded-md mt-2'>
                     {error}
                   </div>
                 )}
 
                 {success && (
-                  <div className='bg-green-500 w-fit text-sm text-white px-3 py-1 rounded-md mt-2'>
+                  <div className='bg-green-400 w-fit text-sm text-white px-3 py-1 rounded-md mt-2'>
                     {success}
                   </div>
                 )}

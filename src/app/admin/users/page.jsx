@@ -1,16 +1,54 @@
-import React from 'react'
+'use client'
+
+import React, { useEffect, useState } from 'react'
 import Container from '../components/Container'
 import AdminNav from '../components/AdminNav'
 import Footer from '../components/Footer'
 import SideBar from '../components/SideBar'
-import Link from 'next/link'
-
+import Link from 'next/link'        
+import { useSession } from 'next-auth/react'
+import { useRouter } from 'next/navigation'
+import DeleteBtn from './DeleteBtn'
 
 function UsersPage() {
+  const router = useRouter();
+  const { data: session, status } = useSession();
+   
+    useEffect(() => {
+        if (status === 'unauthenticated' || session?.user?.role !== 'admin') {
+          router.replace('/login');
+          return;
+        }
+      }, [status, router, session]);
+
+    const [UsersData, setUsersData] = useState([]);
+
+    const getUsersData = async () => {
+        try {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/totalusers`,{
+                cache: 'no-store'
+            })
+
+            if(!res.ok) {
+                throw new Error('Failed to loading users data');
+            }
+
+            const data = await res.json();
+            setUsersData(data.totalUsers);
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    useEffect(() => {
+        getUsersData();
+    }, []);
+
   return (
     <div>
       <Container>
-        <AdminNav />
+        <AdminNav session={session} />
         <div className='flex-grow'>
             <div className='container mx-auto'>
                 <div className='flex mt-10'>
@@ -27,21 +65,23 @@ function UsersPage() {
                                         <th className='p-5'>ID</th>
                                         <th className='p-5'>Username</th>
                                         <th className='p-5'>Email</th>
-                                        <th className='p-5'>Password</th>
+                                        <th className='p-5'>Role</th>
                                         <th className='p-5'>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td  className='p-5'>11</td>
-                                        <td className='p-5'>John Doe</td>
-                                        <td className='p-5'>john@gmail.com</td>
-                                        <td className='p-5'>1234567890</td>
-                                        <td className='p-5 flex gap-3'>
-                                            <Link href='/admin/users/edit' className='bg-gray-500 text-white border px-3 py-2 rounded-md my-2 text-lg'>Edit</Link>
-                                            <Link href='/admin/users/delete' className='bg-red-500 text-white border px-3 py-2 rounded-md my-2 text-lg'>Delete</Link>
-                                        </td>
-                                    </tr>
+                                    {UsersData.map((user) => (
+                                         <tr key={user._id}>
+                                         <td className='p-5'>{user._id}</td>
+                                         <td className='p-5'>{user.name}</td>
+                                         <td className='p-5'>{user.email}</td>
+                                         <td className='p-5'>{user.role}</td>
+                                         <td className='p-5 flex gap-3'>
+                                             <Link href={`/admin/users/edit/${user._id}`} className='bg-gray-500 text-white border px-3 py-2 rounded-md my-2 text-lg'>Edit</Link>
+                                             <DeleteBtn id={user._id} />
+                                         </td>
+                                     </tr>
+                                    ))}
                                 </tbody>
                             </table>
                         </div>

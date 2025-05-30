@@ -54,10 +54,6 @@ function LoginPage() {
     );
   }
 
-  if (session) {
-    return null;
-  }
-
   return (
     <div>
       <Container>

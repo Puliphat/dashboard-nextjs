@@ -25,6 +25,14 @@ function CreatePage() {
       return;
     }
   }, [status, router]);
+  
+  useEffect(() => {
+    if ( status === 'authenticated' && session?.user?.role == 'admin') {
+      router.replace('/admin');
+      return;
+    }
+  }, [session, router]);
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -38,7 +46,7 @@ function CreatePage() {
     setError('');
 
     try {
-      const res = await fetch("http://localhost:3000/api/posts", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/posts`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -69,9 +77,7 @@ function CreatePage() {
     );
   }
 
-  if (!session) {
-    return null;
-  }
+
 
   return (
     <Container>

@@ -5,10 +5,10 @@ import React from 'react'
 function DeleteBtn({ id }) {
 
     const handleDelete = async () => {
-        const confirmed = confirm('Are you sure to delete this post?');
+        const confirmed = confirm('Are you sure to delete this user?');
 
     if (confirmed) {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/posts?id=${id}`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/totalusers?id=${id}`, {
             method: 'DELETE',
         });
 
