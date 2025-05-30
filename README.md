@@ -1,36 +1,63 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 📊 Dashboard Web App
 
-## Getting Started
+เว็บแอป Dashboard ที่ให้ผู้ใช้สามารถสร้างและจัดการโพสต์ของตนเองได้ พร้อมระบบแยกระหว่าง User และ Admin
 
-First, run the development server:
+---
+
+## 🧩 Features
+
+### 🧑‍💻 ฝั่งผู้ใช้ (User)
+- ✅ ลงทะเบียนและล็อกอินด้วย Email & Password (ผ่าน NextAuth)
+- 🖼 เพิ่มโพสต์: หัวข้อ + รูปภาพ + คำอธิบาย
+- ✏️ แก้ไข / 🗑 ลบโพสต์ของตนเอง
+
+### 🛠 ฝั่งแอดมิน (Admin)
+- 📈 แสดงสถิติ: จำนวนผู้ใช้ และจำนวนโพสต์ทั้งหมด
+- 👥 ดูรายชื่อผู้ใช้ทั้งหมด
+- 🧹 ลบและแก้ไขผู้ใช้ได้
+- 🔧 แก้ไข / 🗑 ลบโพสต์ของผู้ใช้ได้ทั้งหมด
+
+---
+
+## 🛠 Tech Stack
+
+- **Frontend**: Next.js 
+- **Authentication**: [NextAuth.js](https://next-auth.js.org/)
+- **Database**: MongoDB (เชื่อมผ่าน Mongoose)
+- **UI**: TailwindCSS
+
+---
+
+## ⚙️ วิธีติดตั้งและรันในเครื่อง (Local)
+
+### 1. Clone โปรเจกต์
 
 ```bash
+git clone https://github.com/your-username/your-repo.git
+cd your-repo
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## 🧾 การตั้งค่าฐานข้อมูล MongoDB
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+แอปนี้ใช้ MongoDB ผ่าน Mongoose โดย:
 
-## Learn More
+หากคุณยังไม่เคยใช้ MongoDB มาก่อน แนะนำให้:
 
-To learn more about Next.js, take a look at the following resources:
+1. สมัครใช้งานฟรีที่ [mongodb.com](https://www.mongodb.com/)
+2. สร้าง Cluster, ตั้งค่าผู้ใช้ และ IP Access
+3. คัดลอก Connection URI มาใส่ใน `.env` ของโปรเจกต์นี้:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **ไม่จำเป็นต้องสร้างฐานข้อมูลหรือ collection เองใน MongoDB Atlas**
+- เมื่อรันแอปและมีการบันทึกข้อมูลครั้งแรก (เช่น การลงทะเบียน user)  
+  → MongoDB จะ **สร้างฐานข้อมูลและ collection ให้อัตโนมัติ**
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### วิธีตั้งค่า `.env`
 
-## Deploy on Vercel
+สร้างไฟล์ชื่อ `.env` ที่ root ของโปรเจกต์ แล้วใส่:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```env
+MONGODB_URI=mongodb+srv://<username>:<password>@<cluster>.e.mongodb.net/<your-db-name>
+NEXTAUTH_SECRET=nextauth
+NEXTAUTH_URL=http://localhost:3000
