@@ -2,17 +2,29 @@ import { NextResponse } from "next/server";
 import { connectMongoDB } from "../../../../lib/mongodb";
 import User from "../../../../models/user";
 
-
-//userExists คือการตรวจสอบว่ามี user ที่มี email นี้อยู่ใน database หรือยัง
+// POST /api/userExists
 export async function POST(req) {
-    try {
-        await connectMongoDB();
-        const { email } = await req.json();
-        const user = await User.findOne({ email }).select("_id");
+  try {
+    await connectMongoDB();
 
-        return NextResponse.json({ user })
+    const { email } = await req.json();
 
-    } catch(error) {
-        console.log(error)
+    if (!email) {
+      return NextResponse.json(
+        { error: "Email is required" },
+        { status: 400 }
+      );
     }
+
+    const user = await User.findOne({ email }).select("_id");
+
+    return NextResponse.json({ exists: !!user });
+
+  } catch (error) {
+    console.error("Error in /api/userExists:", error);
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 }
+    );
+  }
 }
