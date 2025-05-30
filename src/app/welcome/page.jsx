@@ -16,19 +16,16 @@ function WelcomePage() {
   const [postData, setPostsData] = useState([]);
 
   useEffect(() => {
-    if (status === 'unauthenticated') {
+    if (status === 'authenticated') {
+      if (session?.user?.role === 'admin') {
+        router.replace('/admin');
+        return;
+      }
+    } else if (status === 'unauthenticated') {
       router.replace('/login');
       return;
     }
-  }, [status, router]);
-
-  useEffect(() => {
-    if ( status === 'authenticated' && session?.user?.role == 'admin') {
-      router.replace('/admin');
-      return;
-    }
-  }, [session, router]);
-
+  }, [status, session, router]);
 
   useEffect(() => {
     if (session?.user?.email) {

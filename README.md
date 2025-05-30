@@ -61,3 +61,69 @@ npm run dev
 MONGODB_URI=mongodb+srv://<username>:<password>@<cluster>.e.mongodb.net/<your-db-name>
 NEXTAUTH_SECRET=nextauth
 NEXTAUTH_URL=http://localhost:3000
+
+==============================================================================================================
+
+📊 Dashboard Web App
+A Dashboard web application that allows users to create and manage their own posts, with a role-based system separating User and Admin functionalities.
+
+🧩 Features
+🧑‍💻 User Side
+✅ Register and log in using Email & Password (via NextAuth)
+
+🖼 Add posts: title + image + description
+
+✏️ Edit / 🗑 Delete their own posts
+
+🛠 Admin Side
+📈 View statistics: total number of users and posts
+
+👥 View all registered users
+
+🧹 Edit and delete any user
+
+🔧 Edit / 🗑 Delete any user's post
+
+🛠 Tech Stack
+Frontend: Next.js
+
+Authentication: NextAuth.js
+
+Database: MongoDB (connected via Mongoose)
+
+UI: TailwindCSS
+
+⚙️ How to Install and Run Locally
+1. Clone the Repository
+bash
+Copy
+Edit
+git clone https://github.com/your-username/your-repo.git
+cd your-repo
+npm install
+npm run dev
+🧾 MongoDB Database Setup
+This app uses MongoDB via Mongoose.
+
+If you're new to MongoDB, follow these steps:
+
+Sign up for a free account at mongodb.com
+
+Create a Cluster, set up a user, and configure IP access
+
+Copy your connection URI and add it to the .env file in the project root
+
+No need to manually create a database or collections in MongoDB Atlas
+
+Once the app runs and data is saved (e.g., during user registration),
+→ MongoDB will automatically create the database and collections
+
+How to Set Up the .env File
+Create a file named .env at the root of your project and add the following:
+
+env
+Copy
+Edit
+MONGODB_URI=mongodb+srv://<username>:<password>@<cluster>.e.mongodb.net/<your-db-name>
+NEXTAUTH_SECRET=nextauth
+NEXTAUTH_URL=http://localhost:3000
